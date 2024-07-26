@@ -32,9 +32,9 @@ this time. This setting has been tested with Monoliths at Normal and Empowered
 Timelines (no stability was decreased), but I have yet to test it while having some
 Gaze of Orobyss. It should work, though. I hope. I need to play more instead of
 working on this.
-+ ___enableBlessingTransfers___ : Enables the _blessingTransfers_ configuration.
-+ ___blessingTransfers___ : As this Mod is called Simple Modules, it is only fitting that this configuration
-section may induce some headaches to configure.<br />
++ ___enableBlessingTransfers___ : Blessing Transfers are enabled, and the BlessingTransfers.json file is processed
++ ___Blessing Transfers___ : As this Mod is called Simple Modules, it is only fitting that this configuration
+file may induce some headaches to configure.<br />
 + But essentially, when properly configured, this section allows Transfers of
 Blessings from one Monolith Timeline into another.<br />
 This makes it possible to have, for example, _Critical Strike Multiplier_ and _Chritical Hit Chance_ blessings on
@@ -83,7 +83,7 @@ Just a forewarning if something, at some point, breaks between the two.
 and put the files into the game's installation directory, in _"Last Epoch\Mods\"_.
 + If you don't want to use skins, you don't have to install the _LastEpochSM_Skins.dll_ module,<br />
 or if you just want skins, you can skip the _LastEpochSM_Mini.dll_ module.
-+ But _LastEpochSM.dll_ needs to be installed for both of these modules to work.
++ _LastEpochSM.dll_ needs to be installed for both of these modules to work.
 + If you're using the _LastEpochSM_Mini.dll_ module, configure your desired settings in Mini\Conf.json, as everything is turned off by default.
 + The ReadMe files are included with details about the setting options, and an explanation on how to setup the _Blessing Transfers_ feature.
 + Launch your game. Look at the MelonLoader Console for any issues.
