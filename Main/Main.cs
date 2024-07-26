@@ -35,7 +35,7 @@ namespace LastEpochSM
         public override void OnDeinitializeMelon()
         {
             if (!coreComponents.IsNullOrDestroyed())
-            coreComponents.SetActive(false);
+                coreComponents.SetActive(false);
         }
 
         public override void OnApplicationQuit()

@@ -15,7 +15,7 @@ namespace LastEpochSM.Mods
             public override void OnLateUpdate()
             {
                 if (LastEpochSM.Main.instance.IsNullOrDestroyed())
-                    { Unregister("LastEpochSM.dll was not loaded"); return; }
+                    { Unregister("LastEpochSM.dll is not loaded"); return; }
 
                 if (!Mod_Manager.instance.IsNullOrDestroyed())
                 {
@@ -228,8 +228,15 @@ namespace LastEpochSM.Mods
 
                         if (char_data.Cycle == LE.Data.Cycle.Legacy || char_data.Cycle == LE.Data.Cycle.Beta)
                             path = Path.Combine(path, "Legacy");
+                        else if (char_data.Cycle == LE.Data.Cycle.Release)
+                            path = Path.Combine(path, "Release");
                         else
-                            path = Path.Combine(path, ((LE.Data.Cycle)char_data.Cycle).ToString());
+                        {
+                            string cycleName = ((LE.Data.Cycle)char_data.Cycle).ToString();
+                            int cycleNum = (int)char_data.Cycle;
+
+                            path = Path.Combine(path, cycleNum + "-" + cycleName);
+                        }
 
                         filename = "/" + character_name + ".json";
                         Load.UserConfig();

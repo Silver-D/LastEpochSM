@@ -1,0 +1,269 @@
+This file is a detailed explanation of the blessingTransfers configuration section.
+
+Please use a Monospaced font for this document, as it has examples of json that
+may be difficult to understand without monospaced formatting.
+
+When thoroughly configured, this section allows Transfers of Blessings from one
+Monolith Timeline into another. This makes it possible to have, for example,
+Critical Strike Multiplier and Chritical Hit Chance blessings on different
+Timelines -- allowing you to finally have the option of equipping both of these
+blessings at the same time.
+    It also allows you to remove useless blessings from Timelines, making
+it much easier to farm for specific blessings -- and the freedom to fully
+configure an entire set of Timeline Blessings in order to have any desired
+combination of blessings equipped at all times.
+    This works for the Blessing Rewards that you get when beating the Timeline Boss,
+and even works properly for blessings that you have already unlocked and discovered.
+And if you have the blessings in questions equipped, you just need to unequip them
+for them to jump to their configured Timelines.
++ You need to have more than one blessing discovered in a timeline in order to equip
+a different blessing -- just something to keep in mind when moving blessings around.
+
+The format is a little bit complicated, but I hope it is powerful.
+It is also a pain in the butt to configure, but here we go.
+
+The BlessingTransfers.json file comes with some default values, here are the default values
+for Fall of the Outcasts:
+
+"fall of the outcasts": {
+    "firstSlotBlessings": {},
+    "otherSlotBlessings": {},
+    "anySlotBlessings": {}
+    },
+
+First, you need to set the 'enableBlessingTransfers' to true in the Mini\Conf.json for this
+file to be processed.
+But even with 'enableBlessingTransfers' option enabled, this will not do anything by itself.
+Let's take a look.
+Every timeline has firstSlotBlessings, otherSlotBlessings, and anySlotBlessings arrays.
+For a list of blessings and what slots they are in, refer to
+https://www.lastepochtools.com/endgame/monolith/the-black-sun/normal/blessings
+or
+https://lastepoch.tunklab.com/timelines
+
+If you go to Fall of the Outcasts page on those site, it will have 'Slots 2&3', and 'Any Slot'
+blessings listed for that timeline. These are 'otherSlotBlessings', and 'anySlotBlessings',
+respectively.
+
+Now let's say you want to change the blessings and the rewards that are in those slots for
+Fall of the Outcasts. The first thing that goes into the _SlotBlessings arrays is an action.
+
+Supported actions are: 'clear', 'remove', 'transfer', and 'swap'.
+
+Let's go one by one. Example:
+
+* clear: This action only has one parameter: true/false. If true, it will remove all blessings
+from that section in that Timeline. Example:
+
+"fall of the outcasts": {
+    "otherSlotBlessings": { "clear": true }
+},
+...
+
+The above example will remove all blessings from 'Slots 2&3' section in Fall of the Outcasts.
+It is important to note that _EVERYTHING_ in the .conf file is CASE-SENSITIVE.
+All Timeline names all need to be lowercase, and exactly as in the provided config file.
+
+* remove: This action removes specific blessings from that specific section. Example:
+
+"fall of the outcasts": {
+    "anySlotBlessings": { "remove": [1,2] }
+},
+...
+
+This will remove 'Strength of Mind', and 'Scales of Greed' from 'Any Slot' in
+Fall of the Outcasts Timeline.
+
+It is important to note, that these are _indexes_ of those blessings that are in those
+blessingSlots, and indexes start at 0.
+If you look at the Blessing List on those sites, the Blessing that is at index 0
+of "Any Slot" (anySlotBlessings) in Fall of the Outcasts timeline is 'Winds of Fortune',
+index 1 would be 'Strength of Mind', and 2 is 'Scales of Greed'.
+Putting 3 here will throw an 'index out of range' error and abort the parser.
+(I think I put some error checking with some more meaningful error messages, but either way,
+the parser will abort the Transfer Section in its entireity if it sees something it doesn't like.
+Check the output log in the MelonLoader's Console or its Latest Log file to see how far the parser
+got before you broke it!:)).
+
+This, and any other actions on blessings in this module apply to both the Normal and Grand versions
+of those blessings. You don't (and can't) configure them separately.
+
+It is also important to note now, that it is enitirely okay to completely leave blessings
+unassigned and hanging, as well as have an entire timeline that consists of only one blessing.
+In this case, the UI for the Blessing Reward Panel will get a bit confused, however, and will
+offer that one blessing multiple times with different rolls on each. This is not an issue.
+
+Okay, with me still? Okay. Next one is up is 'transfer':
+
+* transfer: Transfers specified blessings from other timelines into this one.
+We know how to remove blessings, now let's insert a blessing into Fall of the Outcasts.
+
+"fall of the outcasts": {
+    "firstSlotBlessings": {
+        "transfer": {
+            "the black sun": { "otherSlotBlessings": [5] }
+        }
+    }
+}
+...
+
+Right. Okay. Let's break this down.
+
+The parser sees: what timeline are we performing on? fall of the outcasts'. Specifically, its firstSlotBlessings section.
+Action to perform here? 'transfer'. It now wants to know where we are transferring from. That would be
+'the black sun'. And we need to specify which sections we want our blessings to come from, and that
+is the 'Slots 2&3' (otherSlotBlessings) section. And what specific blessings do we want from that list?
+For now we want one, the blessing from The Black Sun's 'Slots2&3' section at index 5. Which is 'Winds of Oblivion',
+the Critical Chance blessing.
+
+Congratulations, you can now equip Winds of Oblivion by selecting the Fall of the Outcasts timeline at the Blessing Respec guy
+(unequip it to refresh the list if you have it already equipped somewhere else. Or disable/change config, equip something else
+in that timeline, then enable config. Remember you can't switch blessings if you only have one blessing availble in a timeline).
+And we also always get it as a choice in the Blessing Rewards Panel after beating the Fall of the Outcasts' boss.
+This is because we put Winds of Oblivion in the 'firstSlotBlessings' section (which is empty by default for Fall of the Outcasts),
+and the 'firstSlotBlessings', if not empty, always populates the first choice of the Blessings Reward Panel.
+
+One last thing, the index indicating the blessing that we want to transfer-- it has to be an array. It cannot be just 5, it has to be [5].
+Or we can specify multiple with [5,6]. Etc. (oh oh oh, foreshadowing alert, foreshadowing alert!)
+
+Got it? Probably not. But you can also chain actions, as follows:
+
+"fall of the outcasts": {
+    "otherSlotBlessings": { "clear": true,
+                            "transfer": {
+                                "the black sun": {
+                                    "otherSlotBlessings": [5]
+                                }
+                            }
+                        }
+                    },
+                    ...
+
+First, we completely clear the 'Slots 2&3' section from Fall of the Outcasts, and then we transfer 'Winds of Oblivion'
+from The Black Sun's otherSlotBlessings section into it, making it the only available blessing for 'Slots2&3' section for Fall of the Outcasts.
+This is a buff.
+And now, some more wall of text of further explanation:
+(And before that, yes, the actions are executed in the specified order. Putting a blessing into a section, and then clearing it.. clears the section.)
+
+What we've done in the above examples is move Winds of Oblivion from The Black Sun into Fall of The Outcasts.
+Winds of Oblivion is no longer available in The Black Sun's timeline sections, that means you cannot reference it in the config directly anymore.
+However, you do not really need to keep track of indexes shifting (they don't). For example, if after transfering Winds of Oblivion, you want to
+reference 'Greed of Darkness', which is at index 7 of The Black Sun's 'Slots 2&3', it still is at index 7, and you can still do whatever you want
+with it later down in your config. You do not need to keep track of those indexes in that sense, however, if you try to directly reference its
+old location, index 5, which we've moved, the parser will panic and abort. It knows you've moved, cleared, or removed it.
+It will know. It knows.
+
+As a side note, when you 'remove', or 'clear' blessings, they are lost forever. You can no longer find or reference them in your parser config.
+(Or in the game, for that matter -- that is, until you change your transfers config. The changes are applied every time you start your game,
+but are never really saved. The parser just runs every time you first load any character into the game.
+Again, any changes you make to the transfers config requires you to restart your game for the parser to re-parse the Timelines data.
+I do not keep a backup copy of the data after the parser has done its dirty deed.).
+
+As a back note, by "transferring" blessings to a section, you're "adding" it to that section -- if I didn't make that very understandable.
+So, while indexes never decrease and the lists never physically shrink, they definitely do expand, and the transferred blessings are assigned
+new sequential indexes. But that shouldn't matter too often. Is there even a use case for when you transfer a blessing and then want to
+reference it at its new location to move it again? Well, you can.
+
+I would also like to emphasize something further, that the Timeline changes you make are not anything character-specific.
+They are changes to the game data for the entirety of your current game session, so take advantage of that -- configure your blessings as such,
+so that every character and class you play can benefit from your config. Or keep different configs handy. Huh, maybe I should move them to some presets.
+Character presets?
+Nono, shutup, shutup, stop giving me ideas. Let me finish the documents first at least, argh!
+
+ANYWAY -- You must have further questions and some confusions. No? Well, please indulge me anyway, I'm lonely and I have nothing
+better to do than to bloat this document with meaningless ramblings.
+
+Okay. Back to examples. As you may have keenly noticed, everything is a "key" in theese data arrays. Which means, we cannot have two of the same action
+back to back in the same section.
+
+As such,
+"otherSlotBlessings": { "transfer": { "timeline name": .. },
+           INVALID ---> "transfer": { "other timeline": .. } <--- INVALID
+
+So what do we do? Well.. This is the tricky part with this config.
+Let's see if you can't figure this example out. This will be on the test, btw.
+
+"fall of the outcasts": {
+    "otherSlotBlessings": { "clear": true,
+                            "transfer": {
+                                "the black sun": {
+                                    "otherSlotBlessings": [5]
+                                },
+                                "ending the storm": {
+                                    "firstSlotBlessings": [1],
+                                    "otherSlotBlessings": [0,6]
+                            }
+                        }
+                    },
+    "anySlotBlessings": { "remove": [2] }
+}
+
+Is it clear now? I hope so. We emptied the 'Slots 2&3' section in the timeline, then moved one blessing from The Black Sun's 'Slots 2&3' section,
+and 3 blessings from Ending the Storm's sections -- all into Fall of the Outcasts' 'Slots 2&3' section.
+Oh, and we also removed a blessing from Fall of the Outcasts' 'Any Slot' section while we were at it.
+
+I do not know exactly what this does in terms of gameplay, but it is valid. Note (take a shot when you read note), that these are just
+examples of valid things my demented parser actually digests. Do not use these in game. Real-world examples will be in a separate json
+filled with actual useful things. Someday. I hope. I need more coffee. Maybe you can even make a decent one for others to use, who knows?
+I mean. You're still reading. And we still haven't covered the last action yet! No no, trust me, everything else was important to explain.
+Maybe my timing was off. I'm not a comedian. Was never fun at parties, either.
+
+Okay, actions! We have Swap! You're going to hate this. Oh so much. Well, maybe not, or yes, but I definitely hated writing the parser to support it.
+
+* swap: Swap!
+The problem with the above format is .. YES Yes I know it's a pain in the butt, okay let me start over.
+The _other_ problem with the format is.. Uhh I actually can't think of another one. I totally did when I knew we needed 'swap' Blimey. I'll update this
+section when I remember exactly why I had to implement the swap action. But I did. So here you go. Anyway, swap Example!:
+
+"fall of the outcasts": {
+    "anySlotBlessings": { "swap": {
+                                "2": {
+                                    "the black sun": {
+                                        "otherSlotBlessings": 5
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+Ohh boy. Okay, first of all, notice the "2". That is not an integer, it is a "key". It is both the indicator which exact blessing index we want to swap,
+and it also holds the Timeline's data that indicates with which exact blessing index we're swapping places with.
+Even an online JSON Validator (which I strongly suggest you use) will scream at you if you try to put a 2: there instead of a "2":. It's out of my hands.
+And that "2": represents the index in Fall of the Outcasts' 'Any Slot' blessing, which is, as we already know, is 'Scales of Greed'.
+All in all, at the end of the operation, we end up with:
+'Winds of Oblivion' from The Black Sun's 'Slots 2&3' (the 5) is moved to Fall of The Outcast's 'Any Slot' section, to the index where
+'Scales of Greed' (the 2) is-- and 'Scales of Greed' is moved to The Black Sun's 'Slots 2&3' section, to the index where Winds of Oblivion was.
+Not sure if I'm explaining this clearly enough, but it should make some sense I hope.
+It's still not going to let you swap a blessing that has been moved or removed, on either side of the swap.
+Use the 'transfer' action to add a blessing that you want to that list instead.
+
+Another thing to note (ding) is that everything proceeding the "2": index can only hold exactly one entry. Obviously, because
+we're swapping exactly one specific blessing with exactly one other specific blessing.
+That means, that, "index": can only be followed by one timeline, and that timeline can only be followed by one section, and that secion can only.. well....
+no, no, you can actually write [5] in there if you want. Actually you can actually put [5,2,420,69] there if you really want to, but it will still
+only read it as 5 (the first index of the array, if it's an array). You're welcome. (The main reason I wrote it like that is when I looked at my config,
+it was the only trailing index number that was a number that didnt like having []s around it, and it was annoying to notice why I was getting invalid type
+exceptions at first).
+
+Hooowever, you can still do this:
+
+"fall of the outcasts": {
+    "anySlotBlessings": { "swap": {
+                                "2": {
+                                    "the black sun": {
+                                        "otherSlotBlessings": 5
+                                    }
+                                },
+                                "1": {
+                                    "the age of winter": {
+                                        "otherSlotBlessings": 6
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+Anyway. That about covers it. Yes/No? $_
+
+As a side side note (DING), one interesting observation as I am finishing writing this document and scrolling up, I am noticing a peculiar consistent
+increase in the length of these lines. I didn't do this on purpose. Huh, maybe I need another document that goes backwards the other way.

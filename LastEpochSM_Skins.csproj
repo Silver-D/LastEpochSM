@@ -2,8 +2,6 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{DAF0A5A7-8C71-49E1-932B-28E4AB710839}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -11,6 +9,7 @@
     <AssemblyName>LastEpochSM_Skins</AssemblyName>
     <TargetFramework>net472</TargetFramework>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkMoniker>.NETFramework,Version=$(TargetFrameworkVersion)</TargetFrameworkMoniker>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -32,13 +31,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" PrivateAssets="All" Version="1.0.3" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>\home\alex\.local\install\SteamLibrary\steamapps\common\Last Epoch\MelonLoader\0Harmony.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="LastEpochSM">
-      <HintPath>bin\Release\LastEpochSM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2Cppmscorlib">
@@ -117,6 +114,10 @@
       <HintPath>\home\alex\.local\install\SteamLibrary\steamapps\common\Last Epoch\MelonLoader\Managed\UnityEngine.UIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>\home\alex\.local\install\SteamLibrary\steamapps\common\Last Epoch\MelonLoader\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Mods\Skins\Skins.cs" />
@@ -124,14 +125,27 @@
     <Compile Include="Mods\Skins\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content
-      Include="Mods\Skins\lastepochmods.asset"
-      CopyToOutputDirectory="PreserveNewest"
-      TargetPath="LastEpochSM\Assets\lastepochmods.asset"
-    />
+    <EmbeddedResource Include="Mods\Skins\Resources\Armor.png">
+      <LogicalName>Skins.Resources.Armor.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mods\Skins\Resources\Boots.png">
+      <LogicalName>Skins.Resources.Boots.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mods\Skins\Resources\Gloves.png">
+      <LogicalName>Skins.Resources.Gloves.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mods\Skins\Resources\Helmet.png">
+      <LogicalName>Skins.Resources.Helmet.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mods\Skins\Resources\Shield.png">
+      <LogicalName>Skins.Resources.Shield.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mods\Skins\Resources\Weapon.png">
+      <LogicalName>Skins.Resources.Weapon.png</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="LastEpochSM.csproj" />
+    <ProjectReference Include="LastEpochSM.csproj" ReferenceOutputAssembly="true" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

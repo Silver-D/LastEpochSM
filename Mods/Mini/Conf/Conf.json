@@ -1,0 +1,12 @@
+{
+  "Forge": {
+    "noForgingPotentialCost": false,
+    "alwaysSealAffixWithGlyph": false,
+    "minImplicitRangePercentInt": 0,
+    "minAffixRangePercentInt": 0
+  },
+  "Monolith": {
+    "noLoseWhenDie": false,
+    "enableBlessingTransfers": false
+  }
+}

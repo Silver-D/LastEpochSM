@@ -22,17 +22,12 @@ namespace LastEpochSM.Managers
             }
 
             using (Stream stream = new FileStream(Path.Combine(confPath, file), FileMode.Open))
-            {
-                if (stream.IsNullOrDestroyed())
-                    Log.Msg("Config file " + file + " not found");
-
                 return LoadFromStream(stream);
-            }
         }
 
         public static JObject LoadFromResource(System.Type mod, string rsrc)
         {
-            using (Stream stream = Asset_Manager.GetResourceStream(mod, rsrc) /*mod.Assembly.GetManifestResourceStream(rsrc)*/)
+            using (Stream stream = Asset_Manager.GetResourceStream(mod, rsrc))
                return LoadFromStream(stream);
         }
 

@@ -49,11 +49,7 @@ namespace LastEpochSM.Managers
                     Log.Error("AssetBundle " + asset_name + " was not loaded");
 
                 else
-                {
                     Object.DontDestroyOnLoad(asset_bundle);
-
-                    bundleList.Add(asset_name, asset_bundle);
-                }
             }
 
             else
@@ -62,6 +58,27 @@ namespace LastEpochSM.Managers
             bundleList.Add(asset_name, asset_bundle);
             
             return asset_bundle;
+        }
+
+        public static byte[] LoadFromResource(System.Type mod, string rsrc)
+        {
+            using (Stream stream = Asset_Manager.GetResourceStream(mod, rsrc))
+               return LoadFromStream(stream).ToArray();
+        }
+
+        public static MemoryStream LoadFromStream(Stream stream)
+        {
+            if (stream.IsNullOrDestroyed())
+                return null;
+
+            using (StreamReader streamReader = new StreamReader(stream))
+            {
+                using (MemoryStream memStream = new MemoryStream())
+                {
+                     stream.CopyTo(memStream);
+                     return memStream;
+                }
+            }
         }
 
         public static Stream GetResourceStream(System.Type mod, string rsrc)

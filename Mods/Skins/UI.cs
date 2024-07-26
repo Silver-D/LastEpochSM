@@ -311,12 +311,12 @@ namespace LastEpochSM.Mods
                 public static Sprite Gloves;
                 public static Sprite Helmet;
                 public static Sprite Shield;
-                public static Sprite Weapons;
+                public static Sprite Weapon;
             }
 
             public static void Load()
             {
-                AssetBundle asset_bundle = Asset_Manager.LoadBundle("lastepochmods.asset");
+                /*AssetBundle asset_bundle = Asset_Manager.LoadBundle("lastepochmods.asset");
 
                 if (asset_bundle != null)
                 {
@@ -331,10 +331,27 @@ namespace LastEpochSM.Mods
                             else if (name.Contains("boots"))  { Sprites.Boots = picture; }
                             else if (name.Contains("gloves")) { Sprites.Gloves = picture; }
                             else if (name.Contains("helmet")) { Sprites.Helmet = picture; }
-                            else if (name.Contains("shield")) { Sprites.Shield = picture; }
+                            //else if (name.Contains("shield")) { Sprites.Shield = picture; }
                             else if (name.Contains("weapon")) { Sprites.Weapons = picture; }
                         }
                     }
+                }*/
+
+                Texture2D texture;
+                string[] equipment = { "Helmet", "Armor", "Boots", "Gloves", "Weapon", "Shield"};
+
+                foreach(string e in equipment)
+                {
+                    texture = new Texture2D(2, 2);
+                    ImageConversion.LoadImage(texture, Asset_Manager.LoadFromResource(instance.GetType(), "Skins.Resources." + e + ".png"));
+                    Sprite picture = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+
+                    if      (e == "Helmet") { Sprites.Helmet = picture; }
+                    else if (e == "Armor")  { Sprites.Armor  = picture; }
+                    else if (e == "Boots")  { Sprites.Boots  = picture; }
+                    else if (e == "Gloves") { Sprites.Gloves = picture; }
+                    else if (e == "Weapon") { Sprites.Weapon = picture; }
+                    else if (e == "Shield") { Sprites.Shield = picture; }
                 }
             }
         }
@@ -520,7 +537,7 @@ namespace LastEpochSM.Mods
                     Sprite sprite = null;
                     if (slot_name == helmet) { sprite = Assets.Sprites.Helmet; }
                     else if (slot_name == body_armor) { sprite = Assets.Sprites.Armor; }
-                    else if (slot_name == weapon) { sprite = Assets.Sprites.Weapons; }
+                    else if (slot_name == weapon) { sprite = Assets.Sprites.Weapon; }
                     else if (slot_name == offhand) { sprite = Assets.Sprites.Shield; }
                     else if (slot_name == gloves) { sprite = Assets.Sprites.Gloves; }
                     else if (slot_name == boots) { sprite = Assets.Sprites.Boots; }

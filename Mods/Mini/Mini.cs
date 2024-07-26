@@ -18,7 +18,7 @@ namespace LastEpochSM.Mods
             public override void OnUpdate()
             {
                 if (LastEpochSM.Main.instance.IsNullOrDestroyed())
-                    { Unregister("LastEpochSM.dll was not loaded"); return; }
+                    { Unregister("LastEpochSM.dll is not loaded"); return; }
 
                 if (!Mod_Manager.instance.IsNullOrDestroyed())
                 {
@@ -73,14 +73,15 @@ namespace LastEpochSM.Mods
                 [HarmonyPrefix]
                 static void Prefix(ref CraftingManager __instance)
                 {
-                    __instance.debugNoForgingPotentialCost = Mod_Manager.CanPatch(Conf.Get<bool>("Forge.noForgingPotentialCost"));
+                    if (Mod_Manager.CanPatch(Conf.Get<bool>("Forge.noForgingPotentialCost")))
+                        __instance.debugNoForgingPotentialCost = true;
                 }
 
                 [HarmonyPostfix]
                 static void Postfix(ref CraftingManager __instance)
                 {
-                    ItemData forgeItem = null;
                     rollsApplied = false;
+                    ItemData forgeItem = null;
 
                     if (!__instance.main.IsNullOrDestroyed() && !__instance.main.content.IsNullOrDestroyed())
                         forgeItem = __instance.main.content.data;
@@ -93,6 +94,9 @@ namespace LastEpochSM.Mods
                     byte minUniVal = minAffVal;
 
                     rollsApplied = (minImpVal > 0 || minAffVal > 0 || minUniVal > 0);
+
+                    if (!rollsApplied)
+                        return;
 
                     for (byte i = 0; i < forgeItem.implicitRolls.Count; i++)
                     {
@@ -181,8 +185,8 @@ namespace LastEpochSM.Mods
                     OnError(bpos + ": invalid blessing index for " + what);
                 else if (bpos >= array.Count)
                     OnError(bpos + ": blessing index doesn't exist in " + what);
-                else if (array[bpos] == 0)
-                    OnError(bpos + ": blessing index was already moved or removed from " + what);
+                else if (array[bpos] == -1)
+                    OnError(bpos + ": blessing at index was already moved or removed from " + what);
 
                 return (!error);
             }
@@ -192,13 +196,14 @@ namespace LastEpochSM.Mods
                 JObject tl_settings = Conf.Get<JObject>("Monolith.blessingTransfers");
 
                 string[] slotOptions = { "firstSlotBlessings", "otherSlotBlessings", "anySlotBlessings" };
-                byte diffNum = 2;
                 string[] actions = { "clear", "transfer", "remove", "swap" };
 
                 Dictionary<string, MonolithTimeline> timelines = new Dictionary<string, MonolithTimeline>();
 
                 Dictionary<string, Dictionary<byte, Dictionary<string, List<int>>>> tl_data =
                     new Dictionary<string, Dictionary<byte, Dictionary<string, List<int>>>>();
+
+                byte diffNum = (byte)TimelineList.instance.timelines[0].difficulties.Count;
 
                 for (int i = 0; i < TimelineList.instance.timelines.Count; i++)
                 {
@@ -252,24 +257,29 @@ namespace LastEpochSM.Mods
 
                         foreach(var act in (JObject)to_slot.Value)
                         {
-                            if (!actions.Contains(act.Key))
+                            if (!actions.Contains(act.Key.ToLower()))
                             {
-                                OnError(act.Key + ": is not a valid action. (Case is important: all lower case)");
+                                OnError(act.Key + ": is not a valid action");
                                 return;
                             }
 
                             Log.Msg("  " + act.Key + "");
 
-                            if (act.Key == "clear" && (bool)act.Value)
+                            if (act.Key.ToLower() == "clear")
                             {
-                                for (byte i = 0; i < diffNum; i++)
+                                if ((bool)act.Value)
                                 {
-                                    for (byte b = 0; b < tl_data[to_tl.Key][i][to_slot.Key].Count; b++)
-                                        tl_data[to_tl.Key][i][to_slot.Key][b] = 0;
+                                    for (byte i = 0; i < diffNum; i++)
+                                    {
+                                        for (byte b = 0; b < tl_data[to_tl.Key][i][to_slot.Key].Count; b++)
+                                            tl_data[to_tl.Key][i][to_slot.Key][b] = -1;
+                                    }
                                 }
+                                else
+                                    Log.Msg("  " + "(not clearing: was false)");
                             }
 
-                            else if (act.Key == "remove")
+                            else if (act.Key.ToLower() == "remove")
                             {
                                 string temp = "";
 
@@ -279,7 +289,7 @@ namespace LastEpochSM.Mods
                                         return;
 
                                     for (byte i = 0; i < diffNum; i++)
-                                        tl_data[to_tl.Key][i][to_slot.Key][bpos] = 0;
+                                        tl_data[to_tl.Key][i][to_slot.Key][bpos] = -1;
 
                                     temp += bpos + " ";
                                 }
@@ -287,7 +297,7 @@ namespace LastEpochSM.Mods
                                 Log.Msg("   " + temp);
                             }
 
-                            else if (act.Key == "transfer")
+                            else if (act.Key.ToLower() == "transfer")
                             {
                                 foreach(var from_tl in (JObject)act.Value)
                                 {
@@ -321,7 +331,7 @@ namespace LastEpochSM.Mods
                                             for (byte i = 0; i < diffNum; i++)
                                             {
                                                 tl_data[to_tl.Key][i][to_slot.Key].Add(tl_data[from_tl.Key][i][from_slot.Key][bpos]);
-                                                tl_data[from_tl.Key][i][from_slot.Key][bpos] = 0;
+                                                tl_data[from_tl.Key][i][from_slot.Key][bpos] = -1;
                                             }
                                         }
 
@@ -330,7 +340,7 @@ namespace LastEpochSM.Mods
                                 }
                             }
 
-                            else if (act.Key == "swap")
+                            else if (act.Key.ToLower() == "swap")
                             {
                                 foreach(var to_bl in (JObject)act.Value)
                                 {
@@ -364,7 +374,6 @@ namespace LastEpochSM.Mods
 
                                         tl_data[to_tl.Key][i][to_slot.Key][bpos1] = tl_data[from_tlKey][i][from_slotKey][bpos2];
                                         tl_data[from_tlKey][i][from_slotKey][bpos2] = swap;
-
                                     }
                                 }
                             }
@@ -388,7 +397,7 @@ namespace LastEpochSM.Mods
                     {
                         foreach(int tl_bl in tl_slot.Value)
                         {
-                            if (tl_bl > 0)
+                            if (tl_bl > -1)
                                 slotTotals[tl_slot.Key]++;
                         }
                     }
@@ -430,7 +439,7 @@ namespace LastEpochSM.Mods
 
                             foreach(int tl_bl in tl_slot.Value)
                             {
-                                if (tl_bl > 0)
+                                if (tl_bl > -1)
                                     tl_blessings.Add(tl_bl);
                             }
                         }
@@ -440,7 +449,7 @@ namespace LastEpochSM.Mods
                 Log.Msg("Done.");
                 Log.Msg("Make sure to unequip/reequip any Blessings that you've moved/replaced.");
 
-                /* My original hardcoded swap for testing against the new blessing parser (that was fun, i'm bad at c#)
+                /* My original hardcoded swap, for testing against the new timeline parser (that was fun, i don't understand  c#)
                  *
                  * for (int i = 0; i < 2; i++)
                 {

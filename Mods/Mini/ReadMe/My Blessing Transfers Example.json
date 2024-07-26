@@ -1,0 +1,116 @@
+/*
+#  Read the "Blessings Transfers Format Explained.txt" document for an explanation on how any of this works.
+#  Be very careful with this config if you want to use something similar, as this particular config leaves you
+#  with many Timelines that end up having only one blessing. And as such, it will make it hard
+#  to switch things around, as you can't unequip blessings when you only have one available in a Timeline--
+#  and you need to unequip the blessings that you modified in order for them to jump to their configured timelines.
+#
+#  Don't forget to set the 'enableBlessingTransfers' option to true in the Mini\Conf.json file for this file to be processed.
+#
+#  This is just an example configuration for the BlessingTransfers.json file.
+#  You may not need or want some of these blessings in your playthrough, or even in the Timelines that I put them in.
+#  Use at your discretion. This is more of a usable example, as opposed to the snippets that are in the Explanation ReadMe.
+#
+#  Please use an online JSON validator before launching the game -- if it's not a 100% valid JSON, the JObject parser
+#  will probably choke. These comments are fine, though. For some reason.
+#
+#  When the Blessing Transfers are enabled, the MelonLoader Console will show you every step the parser takes, so
+#  when setting your config up, don't forget to look there as it makes it a bit easier to debug what went wrong.
+#
+*/
+
+/* Supported actions for the *SlotBlessings are: 'clear', 'remove', 'transfer', 'swap'.
+/* Read the Format Explained ReadMe on their usage and the supported formats that these actions expect. */
+
+{
+  "fall of the outcasts": {
+    "firstSlotBlessings": {},
+    "otherSlotBlessings": {
+      "clear": true                   /* remove all blessings from "Slots 2&3" section of Fall of the Outcasts */
+    },
+    "anySlotBlessings": {
+      "clear": true,                  /* remove all blessings from "Any Slot" section of Fall of the Outcasts. The timeline now doesn't have any blessings  in it */
+      "transfer": {
+        "reign of dragons": {
+          "firstSlotBlessings": [2]   /* move 'Dream of Etarra' to Fall of the Outcasts "Any Slot" section. The timeline now only has this one blessing available */
+        }
+      }
+    }
+  },
+  "the stolen lance": {
+    "firstSlotBlessings": {},
+    "otherSlotBlessings": {},
+    "anySlotBlessings": {
+      "clear": true,                  /* remove all blessings from The Stolen Lance "Any Slot" section. The timeline now doesn't have any blessings in it */
+      "transfer": {
+        "the black sun": {
+          "otherSlotBlessings": [5]   /* move 'Winds of Oblivion' to The Stolen Lance "Any Slot" section. The timeline now only has this one blessing available */
+        }
+      }
+    }
+  },
+  "the black sun": {
+    "firstSlotBlessings": {},
+    "otherSlotBlessings": {},
+    "anySlotBlessings": {}
+  },
+  "blood, frost, and death": {
+    "firstSlotBlessings": {},
+    "otherSlotBlessings": {},
+    "anySlotBlessings": {
+      "clear": true,                  /* remove all blessings from "Any Slot" section. The timeline now doesn't have any blessings in it */
+      "transfer": {
+        "ending the storm": {
+          "firstSlotBlessings": [2]   /* move 'Rhythm of the Tide' to Blood, Frost, and Death "Any Slot" section. The timeline now only has this one blessing available */
+        }
+      }
+    }
+  },
+  "ending the storm": {
+    "firstSlotBlessings": {},
+    "otherSlotBlessings": {},
+    "anySlotBlessings": {}
+  },
+  "fall of the empire": {
+    "firstSlotBlessings": {
+      "clear": true                   /* remove all blessings from "Slot 1" section */
+    },
+    "otherSlotBlessings": {
+      "clear": true                   /* remove all blessings from "Slots 2&3" section. The timeline now doesn't have any blessings in it */
+    },
+    "anySlotBlessings": {
+      "transfer": {
+        "the age of winter": {
+          "otherSlotBlessings": [6]   /* move 'Bulwark of the Tundra' to Fall of the Empire "Any Slot" section. The timeline now only has this one blessing available */
+        }
+      }
+    }
+  },
+  "reign of dragons": {
+    "firstSlotBlessings": {},
+    "otherSlotBlessings": {},
+    "anySlotBlessings": {}
+  },
+  "the last ruin": {
+    "firstSlotBlessings": {},
+    "otherSlotBlessings": {},
+    "anySlotBlessings": {
+      "clear": true,                  /* remove all blessings from "Any Slot" section. The timeline now doesn't have any blessings in it */
+      "transfer": {
+        "the black sun": {
+          "otherSlotBlessings": [3]   /* move 'Hunger of the Void' to The Last Ruin "Any Slot" section. The timeline now only has this one blessing available */
+        }
+      }
+    }
+  },
+  "the age of winter": {
+    "firstSlotBlessings": {},
+    "otherSlotBlessings": {},
+    "anySlotBlessings": {}
+  },
+  "spirits of fire": {
+    "firstSlotBlessings": {},
+    "otherSlotBlessings": {},
+    "anySlotBlessings": {}
+  }
+}

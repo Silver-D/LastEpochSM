@@ -1,0 +1,69 @@
+* Forge
+* noForgingPotentialCost: false/true
+    Disables the in-game Forge Potential cost when crafting items.
+This only applies to how the game internals decrease an item's Potential --
+it has no impact on other Mods that want to manipulate an item's Forging
+Potential for any of their special crafts.
+
+* alwaysSealAffixWithGlyph: false/true
+    Always seal a desired affix when upgrading an affix with a Glyph of Despair.
+
+* minImplicitRangePercentInt, minAffixRangePercentInt: 0-100 (50 is 50%)
+    Sets a minimum desired threshold for values when crafting/rerolling items.
+
+    While LastEpoch_Hud has options to apply affix values to an item when it is
+inserted into the Crafting Slot, the options in this module allow for a little
+bit of controlled randomness during the actual forging process-- rather than setting
+a number of specific, deterministic values.
+
+    When enabling these options and Crafting an item for the first time,
+if any of the the item's values are below the desired thresholds, they are rerolled.
+This will only happen once for any specific item (for as long as you don't change
+the values of these settings). Any further alterations of the item will only
+make sure that the new values that you craft are above the desired thresholds.
+    As an added bonus, if you have a Mod that allows you to alter Unique items,
+its Unique Affixes will also be rerolled if they are below the desired
+minAffixRangePercentInt threshold.
+
+    As this process happens at the very end of the ingame's crafting process,
+the craftings window's Results with its value stat changes had to be disabled.
+Use the item's Tooltip to determine if your item has gotten weaker or stronger.
+
+* Monolith
+* noLoseWhenDie: false/true
+    Don't lose stuff when you die in a Monolith.
+
+    While LastEpoch_Hud has a similar checkbox, it actually does nothing at
+this time. This setting has been tested with Monoliths at Normal and Empowered
+Timelines (no stability was decreased), but I have yet to test it while having
+some Gaze of Orobyss. It should work, though. I hope. I need to play more instead
+of working on this.
+
+* enableBlessingTransfers: false/true
+    When this is set to true, Blessing Transfers are enabled, and the
+BlessingTransfers.json file is processed.
+
+* BlessingTransfers (the BlessingTransfers.json file):
+    As this Mod is called Simple Modules, it is only fitting that this configuration
+section may induce some headaches to configure. I may have overcomplicated it a bit,
+but alas.
+
+    Essentially, when properly configured, this section allows Transfers of
+Blessings from one Monolith Timeline into another. This makes it possible to have,
+for example, Critical Strike Multiplier and Chritical Hit Chance blessings on
+different Timelines -- allowing you to finally have the option of equipping both
+of these blessings at the same time.
+    It also allows you to remove useless blessings from Timelines, making it much
+easier to farm for specific blessings -- and the freedom to fully configure an
+entire set of Timeline Blessings in order to have a desired combination of blessings
+equipped at all times.
+    This works for both the Blessing Rewards that you get when beating the Timeline Boss,
+and even works properly for blessings that you have already unlocked and discovered.
+And if you have those blessings in question equipped, you just need to unequip them
+for them to jump to their configured Timelines.
++ You need to have more than one blessing discovered in a timeline in order to equip a
+different blessing -- just something to keep in mind when moving blessings around,
+as the blessings don't switch Timeline slots while they are equipped.
+
+    Either way, a full explanation of the format of this section is in the
+Blessing Transfers Format Explained.txt document. Have fun.
