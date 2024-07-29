@@ -12,6 +12,12 @@ namespace LastEpochSM.Mods
     {
         public class Main : MelonMod
         {
+            public override void OnLateInitializeMelon()
+            {
+                if (System.Type.GetType("LastEpochSM.Main, LastEpochSM") == null)
+                    Unregister("LastEpochSM.dll is not loaded");
+            }
+
             public override void OnLateUpdate()
             {
                 if (LastEpochSM.Main.instance.IsNullOrDestroyed())

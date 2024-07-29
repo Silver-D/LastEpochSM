@@ -15,10 +15,16 @@ namespace LastEpochSM.Mods
         {
             public static bool transfersInitialized = false;
 
+            public override void OnLateInitializeMelon()
+            {
+                if (System.Type.GetType("LastEpochSM.Main, LastEpochSM") == null)
+                    Unregister("LastEpochSM.dll is not loaded");
+            }
+
             public override void OnUpdate()
             {
                 if (LastEpochSM.Main.instance.IsNullOrDestroyed())
-                    { Unregister("LastEpochSM.dll is not loaded"); return; }
+                { Unregister("LastEpochSM.dll is not loaded"); return; }
 
                 if (!Mod_Manager.instance.IsNullOrDestroyed())
                 {

@@ -16,7 +16,7 @@ This Module has no visual options - everything is configured via its .conf file.
 Here is a brief summary of the settings so far:
 ### Forge
 + __noForgingPotentialCost__ : Disables the in-game Forging Potential cost when crafting items.
-+ __alwaysSealAffixWithGlyph__ : Always seal a desired affix when upgrading an affix with a Glyph of Despair.
++ __alwaysSealAffixWithGlyph__ : Always seal a desired affix when upgrading an affix with a Glyph of Despair.<br />(Currently doesn't work with LastEpoch_Hud's crafting).
 + __minImplicitRangePercentInt, minAffixRangePercentInt__ : Sets a minimum desired threshold for values when crafting/rerolling items.<br />
 While _LastEpoch_Hud_ has options to apply affix values to an item when it
 is inserted into the Crafting Slot, the options in this module allow for a little bit
@@ -29,10 +29,8 @@ Note that the values are integers, 50 is 50%.
 ### Monolith
 + __noLoseWhenDie__ : Don't lose stuff when you die in a Monolith.
 While _LastEpoch_Hud_ has a similar checkbox, it actually does nothing at
-this time. This setting has been tested with Monoliths at Normal and Empowered
-Timelines (no stability was decreased), but I have yet to test it while having some
-Gaze of Orobyss. It should work, though. I hope. I need to play more instead of
-working on this.
+this time.<br />This setting has been tested with Monoliths at Normal and Empowered
+Timelines: no stability was decreased, and no Gazes of Orobyss were lost.
 + ___enableBlessingTransfers___ : Blessing Transfers are enabled, and the _BlessingTransfers.json_ file is processed
 + ___Blessing Transfers___ : As this Mod is called Simple Modules, it is only fitting that this configuration
 file may induce some headaches to configure.<br />

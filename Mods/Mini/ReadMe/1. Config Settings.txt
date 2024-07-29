@@ -7,6 +7,7 @@ Potential for any of their special crafts.
 
 * alwaysSealAffixWithGlyph: false/true
     Always seal a desired affix when upgrading an affix with a Glyph of Despair.
+(Currently doesn't work with LastEpoch_Hud's crafting).
 
 * minImplicitRangePercentInt, minAffixRangePercentInt: 0-100 (50 is 50%)
     Sets a minimum desired threshold for values when crafting/rerolling items.
@@ -35,9 +36,7 @@ Use the item's Tooltip to determine if your item has gotten weaker or stronger.
 
     While LastEpoch_Hud has a similar checkbox, it actually does nothing at
 this time. This setting has been tested with Monoliths at Normal and Empowered
-Timelines (no stability was decreased), but I have yet to test it while having
-some Gaze of Orobyss. It should work, though. I hope. I need to play more instead
-of working on this.
+Timelines: no stability was decreased, and no Gazes of Orobyss were lost.
 
 * enableBlessingTransfers: false/true
     When this is set to true, Blessing Transfers are enabled, and the
