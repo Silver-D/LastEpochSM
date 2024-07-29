@@ -20,8 +20,8 @@ namespace LastEpochSM.Mods
 
             public override void OnLateUpdate()
             {
-                if (LastEpochSM.Main.instance.IsNullOrDestroyed())
-                    { Unregister("LastEpochSM.dll is not loaded"); return; }
+                if (LastEpochSM.Main.instance.IsNullOrDestroyed()) {
+                    Unregister("LastEpochSM.dll is not loaded"); return; }
 
                 if (!Mod_Manager.instance.IsNullOrDestroyed())
                 {

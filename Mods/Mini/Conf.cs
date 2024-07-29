@@ -34,6 +34,9 @@ namespace LastEpochSM.Mods
                     Log.Msg("Created default Config file");
             }
 
+            else
+                CheckConfig();
+
             string btProperty = "blessingTransfers";
 
             JObject defBT = Conf_Manager.LoadFromResource(instance.GetType(), "Mini.BlessingTransfers.json");
@@ -53,6 +56,27 @@ namespace LastEpochSM.Mods
             ((JObject)usrConf.SelectToken("Monolith")).Add(btProperty, usrBT);
 
             Initialized = true;
+        }
+
+        private static void CheckConfig()
+        {
+            bool to_save = false;
+
+            foreach(var sect in (JObject)defConf)
+            {
+                foreach(var opt in (JObject)sect.Value)
+                {
+                    if (usrConf.SelectToken(sect.Key + "." + opt.Key) == null)
+                    {
+                        ((JObject)usrConf.SelectToken(sect.Key)).Add(opt.Key, opt.Value);
+
+                        to_save = true;
+                    }
+                }
+            }
+
+            if (to_save)
+                Save(usrDir + "Conf.json", usrConf);
         }
 
         private static bool Save(string file, JObject obj)

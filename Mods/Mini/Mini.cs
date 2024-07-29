@@ -23,8 +23,8 @@ namespace LastEpochSM.Mods
 
             public override void OnUpdate()
             {
-                if (LastEpochSM.Main.instance.IsNullOrDestroyed())
-                { Unregister("LastEpochSM.dll is not loaded"); return; }
+                if (LastEpochSM.Main.instance.IsNullOrDestroyed()) {
+                    Unregister("LastEpochSM.dll is not loaded"); return; }
 
                 if (!Mod_Manager.instance.IsNullOrDestroyed())
                 {
@@ -68,6 +68,19 @@ namespace LastEpochSM.Mods
                 {
                     if (Mod_Manager.CanPatch(Conf.Get<bool>("Forge.alwaysSealAffixWithGlyph")))
                         __result = 1.0f;
+                }
+            }
+
+            [HarmonyPatch(typeof(EchoWeb), "getNewCorruptionForShadeEchoOfTier")]
+            class EchoWeb_getNewCorruptionForShadeEchoOfTier
+            {
+                [HarmonyPrefix]
+                static void Prefix(ref EchoWeb __instance, int __0, int __1, ref int __2)
+                {
+                   if (!Mod_Manager.CanPatch())
+                       return;
+
+                    __2 += Conf.Get<int>("Monolith.bonusCorruptionPerGaze");
                 }
             }
 

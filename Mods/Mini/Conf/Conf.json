@@ -7,6 +7,7 @@
   },
   "Monolith": {
     "noLoseWhenDie": false,
+    "bonusCorruptionPerGaze": 0,
     "enableBlessingTransfers": false
   }
 }
