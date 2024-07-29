@@ -401,6 +401,8 @@ namespace LastEpochSM.Mods
                         //SkillNavigation.active = false;
                         //GameObject SkillCosmetics =
                             GUI_Manager.Functions.GetChild(__instance.gameObject, "Skill Cosmetics").active = false;
+
+                            GUI_Manager.Functions.GetChild(__instance.gameObject, "EP").active = false;
                     }
                     catch { }
 
@@ -424,6 +426,16 @@ namespace LastEpochSM.Mods
                     if (!Mod_Manager.CanPatch()) { return; }
 
                     isOpen = false;
+                }
+            }
+
+            [HarmonyPatch(typeof(CosmeticPanelUI), "SetCurrencyTextAsync")]
+            public class CosmeticPanelUI_SetCurrencyTextAsync
+            {
+                [HarmonyPrefix]
+                static bool Prefix(ref CosmeticPanelUI __instance)
+                {
+                    return (!Mod_Manager.CanPatch());
                 }
             }
 
