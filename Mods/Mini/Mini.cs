@@ -5,6 +5,7 @@ using UnityEngine;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Collections.Generic;
+using LE.Gameplay.Monolith;
 
 namespace LastEpochSM.Mods
 {
@@ -13,7 +14,7 @@ namespace LastEpochSM.Mods
     {
         public class Main : MelonMod
         {
-            public static bool transfersInitialized = false;
+            public static bool transfersInitialized { get; private set; }
 
             public override void OnLateInitializeMelon()
             {
@@ -40,10 +41,12 @@ namespace LastEpochSM.Mods
                 if (Mini.instance.IsNullOrDestroyed() || !Mod_Manager.CanPatch())
                     return;
 
-                Monolith.InitializeTransfers();
+                if (Monolith.InitializeTransfers())
+                {
+                    transfersInitialized = true;
 
-                if (transfersInitialized)
                     MelonEvents.OnLateUpdate.Unsubscribe(this.OnLateUpdate);
+                }
             }
         }
 
@@ -102,8 +105,8 @@ namespace LastEpochSM.Mods
                     if (!Mod_Manager.CanPatch(!forgeItem.IsNullOrDestroyed()))
                         return;
 
-                    byte minImpVal = (byte)(Conf.Get<float>("Forge.minImplicitRangePercentInt") / 100f * 255);
-                    byte minAffVal = (byte)(Conf.Get<float>("Forge.minAffixRangePercentInt") / 100f * 255);
+                    byte minImpVal = (byte)(Conf.Get<float>("Forge.minImplicitRangePercentInt") / 100f * 255).Clamp(0, 255);
+                    byte minAffVal = (byte)(Conf.Get<float>("Forge.minAffixRangePercentInt") / 100f * 255).Clamp(0, 255);
                     byte minUniVal = minAffVal;
 
                     rollsApplied = (minImpVal > 0 || minAffVal > 0 || minUniVal > 0);
@@ -113,13 +116,13 @@ namespace LastEpochSM.Mods
 
                     for (byte i = 0; i < forgeItem.implicitRolls.Count; i++)
                     {
-                        if (forgeItem.implicitRolls[i] < minImpVal && minImpVal >= 0 && minImpVal <= 255)
+                        if (forgeItem.implicitRolls[i] < minImpVal)
                             forgeItem.implicitRolls[i] = (byte)Random.RandomRange(minImpVal, 255);
                     }
 
                     foreach (ItemAffix aff in forgeItem.affixes)
                     {
-                        if (aff.affixRoll < minAffVal && minAffVal >= 0 && minAffVal <= 255)
+                        if (aff.affixRoll < minAffVal)
                             aff.affixRoll = (byte)Random.RandomRange(minAffVal, 255);
                     }
 
@@ -127,7 +130,7 @@ namespace LastEpochSM.Mods
                     {
                         for (byte i = 0; i < forgeItem.uniqueRolls.Count; i++)
                         {
-                            if (forgeItem.uniqueRolls[i] < minUniVal && minUniVal >= 0 && minUniVal <= 255)
+                            if (forgeItem.uniqueRolls[i] < minUniVal)
                                 forgeItem.uniqueRolls[i] = (byte)Random.RandomRange(minUniVal, 255);
                         }
                     }
@@ -156,7 +159,6 @@ namespace LastEpochSM.Mods
 
         class Monolith
         {
-
             [HarmonyPatch(typeof(EchoWebIsland), "onDiedInEcho")]
             class EchoWebIsland_onDiedInEcho
             {
@@ -183,20 +185,53 @@ namespace LastEpochSM.Mods
                 }
             }
 
+            [HarmonyPatch(typeof(MonolithTimeline), "getShadeEchoChance")]
+            class MonolithTimeline_getShadeEchoChance
+            {
+                [HarmonyPrefix]
+                static void Prefix(ref MonolithTimeline __instance, ref int __state)
+                {
+                    if (!Mod_Manager.CanPatch(Conf.Get<bool>("Monolith.noMinIslandTierForShade")))
+                        return;
+
+                    __state = __instance.minTierForShade;
+
+                    MonolithRun currentRun = MonolithGameplayManager.ActiveRun;
+                    int islandTier = MonolithGameplayManager.ActiveIslandTier;
+
+                    if (currentRun.IsNullOrDestroyed())
+                        return;
+
+                    if (currentRun.IsEmpowered && !currentRun.web.HasShadeEcho() && __instance.minTierForShade > islandTier)
+                        __instance.minTierForShade = islandTier;
+                }
+
+                [HarmonyPostfix]
+                static void Postfix(ref MonolithTimeline __instance, int __state)
+                {
+                    if (!Mod_Manager.CanPatch(Conf.Get<bool>("Monolith.noMinIslandTierForShade")))
+                        return;
+
+                    __instance.minTierForShade = __state;
+                }
+            }
+
             static bool error;
 
-            public static void InitializeTransfers()
+            public static bool InitializeTransfers()
             {
                 if (Main.transfersInitialized || !Conf.Initialized)
-                    return;
+                    return false;
 
                 if (!TimelineList.instance.IsNullOrDestroyed() && !TimelineList.instance.timelines.IsNullOrDestroyed())
                 {
-                    Main.transfersInitialized = true;
-
                     if (Conf.Get<bool>("Monolith.enableBlessingTransfers"))
                         Monolith.TransferBlessings();
+
+                    return true;
                 }
+
+                return false;
             }
 
             static void OnError(string str)
@@ -474,34 +509,6 @@ namespace LastEpochSM.Mods
 
                 Log.Msg("Done.");
                 Log.Msg("Make sure to unequip/reequip any Blessings that you've moved/replaced.");
-
-                /* My original hardcoded swap, for testing against the new timeline parser (that was fun, i don't understand  c#)
-                 *
-                 * for (int i = 0; i < 2; i++)
-                {
-                    timelines["fall of the outcasts"].difficulties[i].anySlotBlessings.Clear();
-                    timelines["fall of the outcasts"].difficulties[i].otherSlotBlessings.Clear();
-                    timelines["the stolen lance"].difficulties[i].anySlotBlessings.Clear();
-                    timelines["blood, frost, and death"].difficulties[i].anySlotBlessings.Clear();
-                    timelines["fall of the empire"].difficulties[i].firstSlotBlessings.Clear();
-                    timelines["fall of the empire"].difficulties[i].otherSlotBlessings.Clear();
-                    timelines["the last ruin"].difficulties[i].anySlotBlessings.Clear();
-
-                    timelines["fall of the outcasts"].difficulties[i].anySlotBlessings.Add(timelines["reign of dragons"].difficulties[i].firstSlotBlessings[2]);
-                    timelines["reign of dragons"].difficulties[i].firstSlotBlessings.RemoveAt(2);
-
-                    timelines["the stolen lance"].difficulties[i].anySlotBlessings.Add(timelines["the black sun"].difficulties[i].otherSlotBlessings[5]);
-                    timelines["the black sun"].difficulties[i].otherSlotBlessings.RemoveAt(5);
-
-                    timelines["blood, frost, and death"].difficulties[i].anySlotBlessings.Add(timelines["ending the storm"].difficulties[i].firstSlotBlessings[2]);
-                    timelines["ending the storm"].difficulties[i].firstSlotBlessings.RemoveAt(2);
-
-                    timelines["fall of the empire"].difficulties[i].anySlotBlessings.Add(timelines["the age of winter"].difficulties[i].otherSlotBlessings[6]);
-                    timelines["the age of winter"].difficulties[i].otherSlotBlessings.RemoveAt(6);
-
-                    timelines["the last ruin"].difficulties[i].anySlotBlessings.Add(timelines["the black sun"].difficulties[i].otherSlotBlessings[3]);
-                    timelines["the black sun"].difficulties[i].otherSlotBlessings.RemoveAt(3);
-                }*/
             }
         }
     }

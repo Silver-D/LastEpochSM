@@ -8,6 +8,7 @@
   "Monolith": {
     "noLoseWhenDie": false,
     "bonusCorruptionPerGaze": 0,
+    "noMinIslandTierForShade": false,
     "enableBlessingTransfers": false
   }
 }

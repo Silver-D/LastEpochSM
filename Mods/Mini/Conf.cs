@@ -9,12 +9,12 @@ namespace LastEpochSM.Mods
     {
         public Conf(System.IntPtr ptr) : base(ptr) { }
 
-        private static JObject defConf = null;
-        private static JObject usrConf = null;
-        private static string  usrDir  = "Mini/";
-        private static string  usrFile = "Conf.json";
+        static JObject defConf = null;
+        static JObject usrConf = null;
+        static string  usrDir  = "Mini/";
+        static string  usrFile = "Conf.json";
 
-        public static bool Initialized = false;
+        public static bool Initialized { get; private set; }
 
         public static void Load()
         {
@@ -67,9 +67,12 @@ namespace LastEpochSM.Mods
 
         public static void ReLoad()
         {
-            string usrConfFile = usrDir + usrFile;
+            if (!Initialized)
+                return;
 
             Initialized = false;
+
+            string usrConfFile = usrDir + usrFile;
 
             usrConf = Conf_Manager.LoadFromFile(usrConfFile, out bool usrFileExists);
 
@@ -84,7 +87,7 @@ namespace LastEpochSM.Mods
             Initialized = true;
         }
 
-        private static void CheckConfig()
+        static void CheckConfig()
         {
             bool to_save = false;
 
@@ -115,7 +118,7 @@ namespace LastEpochSM.Mods
             }
         }
 
-        private static bool Save(string file, JObject obj)
+        static bool Save(string file, JObject obj)
         {
             return Conf_Manager.SaveToFile(file, obj);
         }
@@ -124,16 +127,17 @@ namespace LastEpochSM.Mods
         {
             JToken val = null;
 
-            if (usrConf != null)
-                val = usrConf.SelectToken(key);
-
-            if (val == null)
+            if (Initialized)
             {
-                val = defConf.SelectToken(key, true);
+                if (usrConf != null)
+                    val = usrConf.SelectToken(key);
 
                 if (val == null)
-                    return default(T);
+                    val = defConf.SelectToken(key, true);
             }
+
+            if (val == null)
+                return (T)default(T);
 
             return (T)val.ToObject<T>();
         }
