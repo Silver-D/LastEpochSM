@@ -18,8 +18,6 @@ namespace LastEpochSM.Mods
 
         public static void Load()
         {
-            Initialized = false;
-
             string usrConfFile = usrDir + usrFile;
             string usrBTFile   = usrDir + "BlessingTransfers.json";
 
@@ -29,7 +27,7 @@ namespace LastEpochSM.Mods
             if (defConf == null)
                 return;
 
-            if (usrConf == null )
+            if (usrConf == null)
             {
                 usrConf = new JObject(defConf);
 
@@ -63,6 +61,25 @@ namespace LastEpochSM.Mods
             }
 
             ((JObject)usrConf.SelectToken("Monolith")).Add(btProperty, usrBT);
+
+            Initialized = true;
+        }
+
+        public static void ReLoad()
+        {
+            string usrConfFile = usrDir + usrFile;
+
+            Initialized = false;
+
+            usrConf = Conf_Manager.LoadFromFile(usrConfFile, out bool usrFileExists);
+
+            if (usrConf == null)
+            {
+                usrConf = new JObject(defConf);
+
+                if (usrFileExists)
+                    Log.Error("Error parsing " + usrConfFile);
+            }
 
             Initialized = true;
         }

@@ -26,9 +26,10 @@ namespace LastEpochSM.Mods
                 if (LastEpochSM.Main.instance.IsNullOrDestroyed()) {
                     Unregister("LastEpochSM.dll is not loaded"); return; }
 
-                if (!Mod_Manager.instance.IsNullOrDestroyed())
+                if (Mod_Manager.CanPatch())
                 {
                     Mod_Manager.Register<Mini>();
+                    MelonEvents.OnSceneWasInitialized.Subscribe(Mini.instance.OnSceneWasInitialized);
 
                     MelonEvents.OnUpdate.Unsubscribe(this.OnUpdate);
                 }
@@ -36,7 +37,7 @@ namespace LastEpochSM.Mods
 
             public override void OnLateUpdate()
             {
-                if (Mini.instance.IsNullOrDestroyed())
+                if (Mini.instance.IsNullOrDestroyed() || !Mod_Manager.CanPatch())
                     return;
 
                 Monolith.InitializeTransfers();
@@ -56,6 +57,12 @@ namespace LastEpochSM.Mods
             instance = this;
 
             Conf.Load();
+        }
+
+        void OnSceneWasInitialized(int buildIndex, string sceneName)
+        {
+            if (Scenes.IsGameScene())
+                Conf.ReLoad();
         }
 
         class Forge

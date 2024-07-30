@@ -23,7 +23,7 @@ namespace LastEpochSM.Mods
                 if (LastEpochSM.Main.instance.IsNullOrDestroyed()) {
                     Unregister("LastEpochSM.dll is not loaded"); return; }
 
-                if (!Mod_Manager.instance.IsNullOrDestroyed())
+                if (Mod_Manager.CanPatch())
                 {
                     Mod_Manager.Register<Skins>();
                     MelonEvents.OnSceneWasInitialized.Subscribe(Skins.instance.OnSceneWasInitialized);

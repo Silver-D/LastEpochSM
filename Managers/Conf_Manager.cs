@@ -45,7 +45,13 @@ namespace LastEpochSM.Managers
             using (StreamReader streamReader = new StreamReader(stream))
                 json = streamReader.ReadToEnd();
 
-            return JObject.Parse(json);
+            try { return JObject.Parse(json); }
+            catch (System.Exception e)
+            {
+                Log.Error(e.Message);
+
+                return null;
+            }
         }
 
         public static bool SaveToFile(string file, JObject conf)
