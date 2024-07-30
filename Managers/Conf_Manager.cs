@@ -10,13 +10,17 @@ namespace LastEpochSM.Managers
 
         public static Logger Log = new Logger("Conf");
 
-        public static JObject LoadFromFile(string file)
+        public static JObject LoadFromFile(string file, out bool fileExists)
         {
             file = file.TrimStart('/', '\\');
+
+            fileExists = true;
 
             if (!File.Exists(Path.Combine(confPath, file)))
             {
                 Log.Msg("Config file " + file + " not found");
+
+                fileExists = false;
 
                 return null;
             }

@@ -71,19 +71,6 @@ namespace LastEpochSM.Mods
                 }
             }
 
-            [HarmonyPatch(typeof(EchoWeb), "getNewCorruptionForShadeEchoOfTier")]
-            class EchoWeb_getNewCorruptionForShadeEchoOfTier
-            {
-                [HarmonyPrefix]
-                static void Prefix(ref EchoWeb __instance, int __0, int __1, ref int __2)
-                {
-                   if (!Mod_Manager.CanPatch())
-                       return;
-
-                    __2 += Conf.Get<int>("Monolith.bonusCorruptionPerGaze");
-                }
-            }
-
             static bool rollsApplied;
 
             [HarmonyPatch(typeof(CraftingManager), "Forge")]
@@ -119,13 +106,13 @@ namespace LastEpochSM.Mods
 
                     for (byte i = 0; i < forgeItem.implicitRolls.Count; i++)
                     {
-                        if (forgeItem.implicitRolls[i] < minImpVal)
+                        if (forgeItem.implicitRolls[i] < minImpVal && minImpVal >= 0 && minImpVal <= 255)
                             forgeItem.implicitRolls[i] = (byte)Random.RandomRange(minImpVal, 255);
                     }
 
                     foreach (ItemAffix aff in forgeItem.affixes)
                     {
-                        if (aff.affixRoll < minAffVal)
+                        if (aff.affixRoll < minAffVal && minAffVal >= 0 && minAffVal <= 255)
                             aff.affixRoll = (byte)Random.RandomRange(minAffVal, 255);
                     }
 
@@ -133,7 +120,7 @@ namespace LastEpochSM.Mods
                     {
                         for (byte i = 0; i < forgeItem.uniqueRolls.Count; i++)
                         {
-                            if (forgeItem.uniqueRolls[i] < minUniVal)
+                            if (forgeItem.uniqueRolls[i] < minUniVal && minUniVal >= 0 && minUniVal <= 255)
                                 forgeItem.uniqueRolls[i] = (byte)Random.RandomRange(minUniVal, 255);
                         }
                     }
@@ -173,6 +160,19 @@ namespace LastEpochSM.Mods
                         return true;
 
                     return false;
+                }
+            }
+
+            [HarmonyPatch(typeof(EchoWeb), "getNewCorruptionForShadeEchoOfTier")]
+            class EchoWeb_getNewCorruptionForShadeEchoOfTier
+            {
+                [HarmonyPrefix]
+                static void Prefix(ref EchoWeb __instance, int __0, int __1, ref int __2)
+                {
+                   if (!Mod_Manager.CanPatch())
+                       return;
+
+                    __2 += Conf.Get<int>("Monolith.bonusCorruptionPerGaze");
                 }
             }
 
@@ -268,7 +268,7 @@ namespace LastEpochSM.Mods
                     {
                         if (!slotOptions.Contains(to_slot.Key))
                         {
-                            OnError(to_slot.Key + ": is not a blessing slot. (Case is important)");
+                            OnError(to_slot.Key + ": is not a valid blessing slot. (Case is important)");
                             return;
                         }
 
@@ -332,7 +332,7 @@ namespace LastEpochSM.Mods
                                     {
                                         if (!slotOptions.Contains(from_slot.Key))
                                         {
-                                            OnError(from_slot.Key + ": is not a blessing slot. (Case is important)");
+                                            OnError(from_slot.Key + ": is not a valid blessing slot. (Case is important)");
                                             return;
                                         }
 
