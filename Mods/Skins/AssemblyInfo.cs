@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using LastEpochSM.Mods;
 
-[assembly: MelonInfo(typeof(Skins.Main), "LastEpochSM_Skins", "3.2.4", "Ash/silverd")]
+[assembly: MelonInfo(typeof(Skins.Main), "LastEpochSM_Skins", "1.0.1", "Ash/silverd")]
 [assembly: MelonGame("Eleventh Hour Games", "Last Epoch")]
 [assembly: VerifyLoaderVersion(0, 5, 7, false)]
 
@@ -20,6 +20,6 @@ using LastEpochSM.Mods;
 
 [assembly: Guid("DAF0A5A7-8C71-49E1-932B-28E4AB710839")]
 
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: AssemblyInformationalVersion("0.0.0.0")]
+[assembly: AssemblyVersion("1.0.0.10")]
+[assembly: AssemblyFileVersion("1.0.0.10")]
+[assembly: AssemblyInformationalVersion("0.0.0.10")]

@@ -31,6 +31,13 @@ Note that the values are integers, 50 is 50%.
 While _LastEpoch_Hud_ has a similar checkbox, it actually does nothing at
 this time.<br />This setting has been tested with Monoliths at Normal and Empowered
 Timelines: no stability was decreased, and no Gazes of Orobyss were lost.
++ __bonusCorruptionPerGaze__ : Adds an extra corruption bonus per acquired gaze when killing a Shade of Orobyss.<br />
+This is on top of any other bonuses to it that you may have.
++ __noMinIslandTierForShade__ : Disables the minimum Echo Island tier restriction before a Shade node can be
+discovered. Only works in Empowered Timelines, and only if there are currently
+no Shade nodes on the web.<br />
+This gives a single Shade node a slight chance to appear whenever an Island
+is completed in an Empowered Timeline. Beyond that the mechanic is unaffected.
 + ___enableBlessingTransfers___ : Blessing Transfers are enabled, and the _BlessingTransfers.json_ file is processed
 + ___Blessing Transfers___ : As this Mod is called Simple Modules, it is only fitting that this configuration
 file may induce some headaches to configure.<br />

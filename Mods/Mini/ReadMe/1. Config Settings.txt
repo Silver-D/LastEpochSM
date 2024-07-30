@@ -38,6 +38,17 @@ Use the item's Tooltip to determine if your item has gotten weaker or stronger.
 this time. This setting has been tested with Monoliths at Normal and Empowered
 Timelines: no stability was decreased, and no Gazes of Orobyss were lost.
 
+* bonusCorruptionPerGaze: integer
+    Adds an extra corruption bonus per acquired gaze when killing a Shade of Orobyss.
+This is on top of any other bonuses to it that you may have.
+
+* noMinIslandTierForShade: false/true
+    Disables the minimum Echo Island tier restriction before a Shade node can be
+discovered. Only works in Empowered Timelines, and only if there are currently
+no Shade nodes on the web.
+    This gives a single Shade node a slight chance to appear whenever an Island
+is completed in an Empowered Timeline. Beyond that the mechanic is unaffected.
+
 * enableBlessingTransfers: false/true
     When this is set to true, Blessing Transfers are enabled, and the
 BlessingTransfers.json file is processed.

@@ -202,7 +202,7 @@ namespace LastEpochSM.Mods
                     if (currentRun.IsNullOrDestroyed())
                         return;
 
-                    if (currentRun.IsEmpowered && !currentRun.web.HasShadeEcho() && __instance.minTierForShade > islandTier)
+                    if (currentRun.IsEmpowered && !currentRun.web.HasShadeEcho() && __instance.minTierForShade > islandTier && islandTier >= 2)
                         __instance.minTierForShade = islandTier;
                 }
 
