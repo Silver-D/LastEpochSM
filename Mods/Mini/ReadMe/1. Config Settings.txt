@@ -7,7 +7,6 @@ Potential for any of their special crafts.
 
 * alwaysSealAffixWithGlyph: false/true
     Always seal a desired affix when upgrading an affix with a Glyph of Despair.
-(Currently doesn't work with LastEpoch_Hud's crafting).
 
 * minImplicitRangePercentInt, minAffixRangePercentInt: 0-100 (50 is 50%)
     Sets a minimum desired threshold for values when crafting/rerolling items.

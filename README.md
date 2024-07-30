@@ -16,7 +16,7 @@ This Module has no visual options - everything is configured via its .conf file.
 Here is a brief summary of the settings so far:
 ### Forge
 + __noForgingPotentialCost__ : Disables the in-game Forging Potential cost when crafting items.
-+ __alwaysSealAffixWithGlyph__ : Always seal a desired affix when upgrading an affix with a Glyph of Despair.<br />(Currently doesn't work with LastEpoch_Hud's crafting).
++ __alwaysSealAffixWithGlyph__ : Always seal a desired affix when upgrading an affix with a Glyph of Despair.
 + __minImplicitRangePercentInt, minAffixRangePercentInt__ : Sets a minimum desired threshold for values when crafting/rerolling items.<br />
 While _LastEpoch_Hud_ has options to apply affix values to an item when it
 is inserted into the Crafting Slot, the options in this module allow for a little bit
@@ -81,8 +81,7 @@ Stuff has been cleaned up, and some some stuff has been moved around and made ea
 + LastEpochSM is made to be compatible with the [LastEpoch_Hud](https://github.com/RCInet/LastEpoch_Mods), but **LastEpochSM_Skins** _is incompatibe_ with:
 + The **LastEpoch_Mods Skins Standalone** that's found on the _Nexus_ is _incompatible_.
 + If you wish to use this version of the Skins mod, please disable that Mod in your installation directory by moving it to a different folder.
-+ While it was thoroughly tested with _LastEpoch_Hud_, these are different projects by different people, and as such, some compatibility issues may arise, especially since both of these projects use very similar methods to patch the game's code.<br />
-Just a forewarning if something, at some point, breaks between the two.
++ Due to the fact that currently, the latest version of _LastEpoch_Hud_ completely replaces the forging system with no real way to disable it at all, most __Forge__ settings do not work when it comes to upgrading existing affixes on items.<br />Re-rolling specific aspects of items with Runes and adding affixes still work, however, and the module's settings are utilized.
 ## How to :
 + Install [Melon Loader 0.5.7](https://github.com/LavaGang/MelonLoader) ([0.5.7 specifically](https://github.com/LavaGang/MelonLoader/releases/tag/v0.5.7))
 + Launch your game once.
