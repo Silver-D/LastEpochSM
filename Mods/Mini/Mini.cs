@@ -53,7 +53,7 @@ namespace LastEpochSM.Mods
         public Mini(System.IntPtr ptr) : base(ptr) { }
         public static Mini instance { get; private set; }
 
-        public static Logger Log = new Logger("Mini");
+        public static Logger Log = new Logger("Mini", false);
 
         void Awake()
         {
@@ -181,7 +181,8 @@ namespace LastEpochSM.Mods
                    if (!Mod_Manager.CanPatch())
                        return;
 
-                    __2 += Conf.Get<int>("Monolith.bonusCorruptionPerGaze");
+                    // check this
+                    __2 += Conf.Get<int>("Monolith.bonusCorruptionPerGaze").Clamp(-50, 50);
                 }
             }
 
@@ -207,10 +208,12 @@ namespace LastEpochSM.Mods
                 }
 
                 [HarmonyPostfix]
-                static void Postfix(ref MonolithTimeline __instance, int __state)
+                static void Postfix(ref MonolithTimeline __instance, int __state, float __result)
                 {
                     if (!Mod_Manager.CanPatch(Conf.Get<bool>("Monolith.noMinIslandTierForShade")))
                         return;
+
+                    Log.Debug("Shade chance: " + __result + " (" + MonolithGameplayManager.ActiveIslandTier + ")");
 
                     __instance.minTierForShade = __state;
                 }

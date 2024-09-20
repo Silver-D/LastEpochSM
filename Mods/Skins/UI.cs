@@ -384,27 +384,13 @@ namespace LastEpochSM.Mods
                 {
                     if (!Mod_Manager.CanPatch()) { return; }
 
-                    try
-                    {
-                        __instance.getCoinsButton.gameObject.active = false;
-                        __instance.openShopButton.gameObject.active = false;
-                        __instance.availableTitlesDropdown.gameObject.active = false;
-                        foreach (CosmeticItemSlot equip_slot in __instance.equipSlots) { equip_slot.gameObject.active = false; }
-                        foreach (CosmeticItemSlot pet_slot in __instance.petSlots) { pet_slot.gameObject.active = false; }
-                    }
-                    catch { Log.Error("CosmeticPanelUI:OnEnable Error Hidding defaults slots"); }
+                    string[] def_ui = { "Player Titles", "Equippables", "EP", "Skill Cosmetics", "GetPoints", "OpenShop" };
 
-                    try
+                    foreach(string e in def_ui)
                     {
-                        //GameObject SkillNavigation =
-                            GUI_Manager.Functions.GetChild(__instance.gameObject, "SkillNavigation").active = false;
-                        //SkillNavigation.active = false;
-                        //GameObject SkillCosmetics =
-                            GUI_Manager.Functions.GetChild(__instance.gameObject, "Skill Cosmetics").active = false;
-
-                            GUI_Manager.Functions.GetChild(__instance.gameObject, "EP").active = false;
+                        try { GUI_Manager.Functions.GetChild(__instance.gameObject, e).active = false; }
+                        catch { }
                     }
-                    catch { }
 
                     try
                     {
@@ -579,7 +565,7 @@ namespace LastEpochSM.Mods
                 [HarmonyPostfix]
                 static void Postfix(ref CosmeticsFlyoutSelectionContentNavigable __instance)
                 {
-                    if (!Mod_Manager.CanPatch()) { return; }
+                    if (!Mod_Manager.CanPatch(!__instance.shopButton.IsNullOrDestroyed())) { return; }
 
                     //Get Position & Size
                     Helper.Ui_Info infos = Helper.Get_UI_Infos_Center(__instance.gameObject);
@@ -609,7 +595,7 @@ namespace LastEpochSM.Mods
                 [HarmonyPostfix]
                 static void Postfix(ref CosmeticsFlyoutSelectionContentNavigable __instance)
                 {
-                    if (!Mod_Manager.CanPatch()) { return; }
+                    if (!Mod_Manager.CanPatch(!__instance.shopButton.IsNullOrDestroyed())) { return; }
 
                     isOpen = false;
                 }

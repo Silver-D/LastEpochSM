@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ! install dotnet-sdk-6.0
+# ! install dotnet-sdk-8.0 or dotnet-sdk-6.0
 # ! fix your paths in <HintPath> in the .csproj files to where your Game and MelonLoader are installed
 # ! To compile the Mods, LastEpochSM.dll must first be compiled via LastEpochSM.csproj
 # ! On Linux there are issues building directly from the .sln file for the first time, due to project dependencies
